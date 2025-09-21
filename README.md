@@ -30,6 +30,28 @@ The system automates the entire ML lifecycle — **data ingestion, validation, t
 ---
 
 ## 📂 Project Structure
+├── app.py # Web app for predictions
+├── main.py # Entry point for training pipeline
+├── push_data.py # Utility to push new data
+├── data_schema/schema.yaml # Schema for validation
+├── final_model/ # Trained model + preprocessor
+├── prediction_output/ # Batch predictions
+├── Artifacts/ # Versioned pipeline artifacts
+├── networksecurity/ # Core ML package
+│ ├── components/ # Ingestion, validation, transformation, training
+│ ├── pipeline/ # Training & batch prediction pipelines
+│ ├── utils/ # Metrics & ML utilities
+│ ├── cloud/ # AWS S3 sync
+│ ├── logging/ # Custom logging
+│ ├── exception/ # Error handling
+│ └── constant/ # Configs & constants
+├── templates/table.html # Simple UI for web app
+├── logs/ # Pipeline and app logs
+├── requirements.txt # Python dependencies
+├── Dockerfile # Containerization
+├── setup.py # Package setup
+├── README.md # Documentation
+└── .github/workflows/ # CI/CD pipelines
 
 ### Network Security Projects For Phising Data
 
