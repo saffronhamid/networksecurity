@@ -30,6 +30,7 @@ The system automates the entire ML lifecycle — **data ingestion, validation, t
 ---
 
 ## 📂 Project Structure
+```plaintext
 ├── app.py # Web app for predictions
 ├── main.py # Entry point for training pipeline
 ├── push_data.py # Utility to push new data
