@@ -28,6 +28,7 @@ def get_requirements()->List[str]:
         print("requirements.txt file not found")
 
     return requirement_lst
+print(get_requirements())
 
 setup(
     name="NetworkSecurity",
