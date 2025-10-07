@@ -86,6 +86,7 @@ class DataIngestion:
             logging.info(f"Exported train and test file path.")
 
             
+            
         except Exception as e:
             raise NetworkSecurityException(e,sys)
         
