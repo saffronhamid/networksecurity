@@ -88,7 +88,7 @@ class DataValidation:
             status=self.detect_dataset_drift(base_df=train_dataframe,current_df=test_dataframe)
             dir_path=os.path.dirname(self.data_validation_config.valid_train_file_path)
             os.makedirs(dir_path,exist_ok=True)
-
+ 
             train_dataframe.to_csv(
                 self.data_validation_config.valid_train_file_path, index=False, header=True
 
