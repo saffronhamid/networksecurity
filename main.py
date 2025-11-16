@@ -14,6 +14,7 @@ import sys
 
 if __name__=='__main__':
     try:
+        
         trainingpipelineconfig=TrainingPipelineConfig()
         dataingestionconfig=DataIngestionConfig(trainingpipelineconfig)
         data_ingestion=DataIngestion(dataingestionconfig)
