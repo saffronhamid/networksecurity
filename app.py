@@ -1,6 +1,5 @@
 import sys
 import os
-import os
 
 import certifi
 ca = certifi.where()
