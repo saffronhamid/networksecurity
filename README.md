@@ -68,7 +68,7 @@ The system automates the entire ML lifecycle — **data ingestion, validation, t
 ![Flow Diagram](docs/diagrams/flow.png)
 
 ### 2️⃣ Architecture Diagram
-![Architecture Diagram](networksecurity\docs\diagrams\architecture.png)
+![Architecture Diagram](\docs\diagrams\architecture.png)
 
 ### 3️⃣ Sequence Diagram
 ![Sequence Diagram](docs/diagrams/seq.png)
