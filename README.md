@@ -62,3 +62,24 @@ The system automates the entire ML lifecycle — **data ingestion, validation, t
 │   ├── class.uml
 │   └── class.png
 └── .github/workflows/     # CI/CD pipelines
+## 📊 UML Diagrams
+
+### 1️⃣ Flow Diagram
+- UML source: [flow.uml](docs/diagrams/flow.uml)  
+- Rendered diagram:  
+![Flow Diagram](docs/diagrams/flow.png)
+
+### 2️⃣ Architecture Diagram
+- UML source: [architecture.uml](docs/diagrams/architecture.uml)  
+- Rendered diagram:  
+![Architecture Diagram](docs/diagrams/architecture.png)
+
+### 3️⃣ Sequence Diagram
+- UML source: [seq.uml](docs/diagrams/seq.uml)  
+- Rendered diagram:  
+![Sequence Diagram](docs/diagrams/seq.png)
+
+### 4️⃣ Class Diagram
+- UML source: [class.uml](docs/diagrams/class.uml)  
+- Rendered diagram:  
+![Class Diagram](docs/diagrams/class.png)
