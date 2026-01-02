@@ -1,0 +1,94 @@
+@startuml
+title NetworkSecurity – Detailed MLOps Architecture
+
+actor "User" as U
+actor "Admin / DevOps" as DevOps
+
+' ---------- Data Sources ----------
+rectangle "Data Sources" {
+  database "Raw CSV Data" as RawData
+  database "Schema Config (YAML)" as Schema
+}
+
+' ---------- Pipeline Components ----------
+rectangle "ML Pipeline" {
+
+  component "Data Ingestion" as Ingest
+  component "Data Validation" as Validate
+  component "Data Transformation / Feature Engineering" as Transform
+  component "Model Trainer" as Trainer
+  component "Model Evaluation" as Eval
+  component "Model Pusher" as Pusher
+  component "Logging & Monitoring" as Logging
+}
+
+' ---------- Artifacts / Storage ----------
+rectangle "Artifacts / Storage" {
+  folder "DataIngestionArtifact"
+  folder "DataValidationArtifact"
+  folder "DataTransformationArtifact"
+  folder "ModelTrainerArtifact"
+  folder "Final Model"
+  folder "Prediction Output"
+  folder "Logs"
+}
+
+' ---------- Deployment ----------
+rectangle "Deployment & Serving" {
+  component "API Server (Flask / app.py)" as API
+  component "Web UI (templates/table.html)" as UI
+  component "Batch Predictions (push_data.py)" as Batch
+  cloud "AWS S3" as Cloud
+  rectangle "Docker Container" as Docker
+}
+
+' ---------- CI/CD ----------
+rectangle "CI/CD / DevOps" {
+  component "GitHub Actions" as CI
+  component "Docker Build & Push" as DockerBuild
+  component "Model Versioning" as Versioning
+}
+
+' ---------- Connections ----------
+
+' User submits URL
+U --> API : Submit URL
+API --> UI : Display prediction
+API --> Trainer : Load latest model
+API --> Logging : Log API requests
+
+' Raw data pipeline
+RawData --> Ingest : Read raw CSV
+Schema --> Validate : Validate data against schema
+Ingest --> Validate : Pass ingested data
+Validate --> Transform : Pass validated data
+Transform --> Trainer : Feature array / transformed data
+Trainer --> Eval : Evaluate model
+Eval --> Pusher : Approved model?
+Pusher --> "Final Model" : Save
+Pusher --> Cloud : Upload to S3
+Trainer --> "ModelTrainerArtifact"
+Transform --> "DataTransformationArtifact"
+Validate --> "DataValidationArtifact"
+Ingest --> "DataIngestionArtifact"
+
+' Batch predictions
+Batch --> "Final Model" : Load model
+Batch --> "Prediction Output" : Save predictions
+Batch --> Logging : Log batch run
+
+' Logging & monitoring
+Logging --> "Logs" : Save logs
+Logging --> DevOps : Alerts & monitoring
+
+' Docker & Deployment
+DockerBuild --> Docker : Build container
+Docker --> API : Serve model
+Docker --> Batch : Run batch predictions
+Docker --> Cloud : Model artifacts / configs
+
+' CI/CD integration
+CI --> DockerBuild : Trigger on push
+CI --> Versioning : Tag model versions
+
+@enduml

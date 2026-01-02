@@ -1,6 +1,6 @@
 # 🔒 Phishing URL Detection System
 
-An end-to-end **Machine Learning project** for detecting phishing URLs, built with modular pipelines, MLOps best practices, and deployment support.  
+An end-to-end **Machine Learning project** for detecting phishing URLs, built with **modular pipelines**, **MLOps best practices**, and **deployment support**.  
 The system automates the entire ML lifecycle — **data ingestion, validation, transformation, training, evaluation, and prediction** — and serves predictions through a web app and batch pipeline.
 
 ---
@@ -31,55 +31,25 @@ The system automates the entire ML lifecycle — **data ingestion, validation, t
 
 ## 📂 Project Structure
 ```plaintext
-├── app.py # Web app for predictions
-├── main.py # Entry point for training pipeline
-├── push_data.py # Utility to push new data
-├── data_schema/schema.yaml # Schema for validation
-├── final_model/ # Trained model + preprocessor
-├── prediction_output/ # Batch predictions
-├── Artifacts/ # Versioned pipeline artifacts
-├── networksecurity/ # Core ML package
-│ ├── components/ # Ingestion, validation, transformation, training
-│ ├── pipeline/ # Training & batch prediction pipelines
-│ ├── utils/ # Metrics & ML utilities
-│ ├── cloud/ # AWS S3 sync
-│ ├── logging/ # Custom logging
-│ ├── exception/ # Error handling
-│ └── constant/ # Configs & constants
-├── templates/table.html # Simple UI for web app
-├── logs/ # Pipeline and app logs
-├── requirements.txt # Python dependencies
-├── Dockerfile # Containerization
-├── setup.py # Package setup
-├── README.md # Documentation
-└── .github/workflows/ # CI/CD pipelines
-
-### Network Security Projects For Phising Data
-
-Setup github secrets:
-AWS_ACCESS_KEY_ID=
-
-AWS_SECRET_ACCESS_KEY=
-
-AWS_REGION = us-east-1
-
-AWS_ECR_LOGIN_URI = 788614365622.dkr.ecr.us-east-1.amazonaws.com/networkssecurity
-ECR_REPOSITORY_NAME = networkssecurity
-
-
-Docker Setup In EC2 commands to be Executed
-#optinal
-
-sudo apt-get update -y
-
-sudo apt-get upgrade
-
-#required
-
-curl -fsSL https://get.docker.com -o get-docker.sh
-
-sudo sh get-docker.sh
-
-sudo usermod -aG docker ubuntu
-
-newgrp docker
+├── app.py                 # Web app for predictions
+├── main.py                # Entry point for training pipeline
+├── push_data.py           # Utility to push new data
+├── data_schema/schema.yaml
+├── final_model/           # Trained model + preprocessor
+├── prediction_output/     # Batch prediction outputs
+├── Artifacts/             # Versioned pipeline artifacts
+├── networksecurity/
+│   ├── components/        # Ingestion, validation, transformation, training
+│   ├── pipeline/          # Training & batch pipelines
+│   ├── utils/             # Metrics & ML utilities
+│   ├── cloud/             # AWS S3 sync
+│   ├── logging/           # Custom logging
+│   ├── exception/         # Error handling
+│   └── constant/          # Configs & constants
+├── templates/table.html    # Simple web UI
+├── logs/                  # Pipeline and app logs
+├── requirements.txt       # Python dependencies
+├── Dockerfile             # Containerization
+├── setup.py               # Package setup
+├── README.md              # Documentation
+└── .github/workflows/     # CI/CD pipelines

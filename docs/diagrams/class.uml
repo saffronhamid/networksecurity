@@ -1,0 +1,118 @@
+@startuml
+title NetworkSecurity – Detailed Class Diagram
+
+' ---------------------- Artifacts ----------------------
+class DataIngestionArtifact {
+  +train_file_path: str
+  +test_file_path: str
+}
+
+class DataValidationArtifact {
+  +schema_status: bool
+  +validated_train_path: str
+  +validated_test_path: str
+}
+
+class DataTransformationArtifact {
+  +transformed_train_array: np.array
+  +transformed_test_array: np.array
+}
+
+class ModelTrainerArtifact {
+  +model_path: str
+  +metrics: dict
+}
+
+' ---------------------- Pipeline Components ----------------------
+class DataIngestion {
+  +ingest_data(): DataIngestionArtifact
+  -read_csv(path: str)
+  -split_train_test()
+}
+
+class DataValidation {
+  +validate_data(artifact: DataIngestionArtifact): DataValidationArtifact
+  -check_schema(data)
+  -check_missing_values(data)
+  -log_errors(errors)
+}
+
+class DataTransformation {
+  +transform_data(artifact: DataValidationArtifact): DataTransformationArtifact
+  -feature_engineering(data)
+  -scale_features(data)
+  -save_transformed_arrays()
+}
+
+class ModelTrainer {
+  +train_model(artifact: DataTransformationArtifact): ModelTrainerArtifact
+  -fit_model(X, y)
+  -evaluate_model(X_val, y_val)
+  -save_model(file_path)
+}
+
+class ModelEvaluator {
+  +evaluate_model(model: ModelTrainerArtifact): dict
+  -compare_with_previous_model(model)
+  -decide_acceptance(metrics)
+}
+
+class ModelPusher {
+  +push_model(model: ModelTrainerArtifact)
+  -save_to_local(model)
+  -upload_to_s3(model)
+}
+
+class TrainingPipeline {
+  +run_pipeline(): ModelTrainerArtifact
+  -ingest: DataIngestion
+  -validate: DataValidation
+  -transform: DataTransformation
+  -trainer: ModelTrainer
+  -evaluator: ModelEvaluator
+  -pusher: ModelPusher
+}
+
+' ---------------------- Deployment ----------------------
+class API {
+  +submit_url(url: str): str
+  -load_model(model_path)
+  -preprocess_input(url)
+  -predict(features)
+}
+
+class BatchPrediction {
+  +predict_batch(csv_file: str): str
+  -load_model(model_path)
+  -preprocess_batch(data)
+  -predict(data)
+  -save_predictions(file_path)
+}
+
+' ---------------------- Relationships ----------------------
+
+' Pipeline composition
+TrainingPipeline --> DataIngestion
+TrainingPipeline --> DataValidation
+TrainingPipeline --> DataTransformation
+TrainingPipeline --> ModelTrainer
+TrainingPipeline --> ModelEvaluator
+TrainingPipeline --> ModelPusher
+
+' Artifacts returned from each stage
+DataIngestion --> DataIngestionArtifact
+DataValidation --> DataValidationArtifact
+DataTransformation --> DataTransformationArtifact
+ModelTrainer --> ModelTrainerArtifact
+
+' API / Batch usage
+API --> ModelTrainer
+API --> DataTransformation
+BatchPrediction --> ModelTrainer
+BatchPrediction --> DataTransformation
+
+' Optional: user interaction
+API ..> "User" : receives input / returns prediction
+BatchPrediction ..> "Admin" : batch runs
+
+@enduml

@@ -1,0 +1,67 @@
+@startuml
+title NetworkSecurity – Training Pipeline (Detailed)
+
+start
+
+:main.py invoked;
+
+partition "Pipeline Orchestration" {
+  :Initialize TrainingPipeline;
+  :Start run_pipeline();
+}
+
+partition "Data Ingestion" {
+  :Read raw CSV data;
+  :Create DataIngestionArtifact;
+  :Save train/test split;
+}
+
+partition "Data Validation" {
+  :Load schema.yaml;
+  :Check column names;
+  :Check data types;
+  :Check missing values;
+  if (Schema valid?) then (yes)
+    :Create DataValidationArtifact;
+  else (no)
+    :Log validation error;
+    stop
+  endif
+}
+
+partition "Data Transformation" {
+  :Load validated data;
+  :Apply preprocessing;
+  :Feature extraction;
+  :Save transformed arrays;
+  :Create DataTransformationArtifact;
+}
+
+partition "Model Trainer" {
+  :Load transformed data;
+  :Train ML model;
+  :Evaluate on train/validation;
+  :Save trained model (.pkl);
+  :Create ModelTrainerArtifact;
+}
+
+partition "Model Evaluation" {
+  :Load trained model;
+  :Compare with previous model;
+  if (New model better?) then (yes)
+    :Accept model;
+  else (no)
+    :Reject model;
+    stop
+  endif
+}
+
+partition "Model Pusher" {
+  :Push model to final_model/;
+  :Sync model to cloud (S3);
+}
+
+:Pipeline completed successfully;
+stop
+
+@enduml

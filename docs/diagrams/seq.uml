@@ -1,0 +1,75 @@
+@startuml
+title NetworkSecurity – Detailed Sequence Diagram
+
+actor "User" as U
+actor "Admin" as Admin
+
+participant "main.py" as Main
+participant "TrainingPipeline" as Pipeline
+participant "DataIngestion" as Ingest
+participant "DataValidation" as Validate
+participant "DataTransformation" as Transform
+participant "ModelTrainer" as Trainer
+participant "ModelEvaluator" as Eval
+participant "ModelPusher" as Pusher
+participant "Flask API (app.py)" as API
+participant "BatchPrediction (push_data.py)" as Batch
+participant "AWS S3" as Cloud
+participant "Logs" as Logging
+
+== Training Pipeline ==
+U -> Main : start training
+Main -> Pipeline : run_pipeline()
+Pipeline -> Ingest : ingest_data()
+Ingest --> Pipeline : DataIngestionArtifact
+
+Pipeline -> Validate : validate_data(artifact)
+Validate --> Pipeline : DataValidationArtifact
+Validate -> Logging : log_validation_status()
+
+Pipeline -> Transform : transform_data(artifact)
+Transform --> Pipeline : DataTransformationArtifact
+Transform -> Logging : log_transformation_status()
+
+Pipeline -> Trainer : train_model(artifact)
+Trainer --> Pipeline : ModelTrainerArtifact
+Trainer -> Logging : log_training_metrics()
+
+Pipeline -> Eval : evaluate_model(model)
+Eval --> Pipeline : evaluation_metrics
+Eval -> Logging : log_evaluation_metrics()
+
+alt Model accepted
+    Pipeline -> Pusher : push_model(model)
+    Pusher -> "Final Model" : save_locally()
+    Pusher -> Cloud : upload_to_s3()
+    Pusher -> Logging : log_model_push()
+else Model rejected
+    Pipeline -> Trainer : retrain_model()
+end
+
+Pipeline --> Main : pipeline_completed
+
+== Real-Time Inference ==
+U -> API : submit URL
+API -> Trainer : load_model(model_path)
+Trainer --> API : trained_model
+API -> Transform : preprocess_input(URL)
+Transform --> API : feature_vector
+API -> Trainer : predict(features)
+Trainer --> API : prediction
+API --> U : return result
+API -> Logging : log_api_request()
+
+== Batch Prediction ==
+Admin -> Batch : run_batch(csv_file)
+Batch -> Trainer : load_model(model_path)
+Trainer --> Batch : model
+Batch -> Transform : preprocess_batch(data)
+Transform --> Batch : transformed_data
+Batch -> Trainer : predict_batch(transformed_data)
+Trainer --> Batch : predictions
+Batch -> "Prediction Output" : save_csv()
+Batch -> Logging : log_batch_run()
+
+@enduml
