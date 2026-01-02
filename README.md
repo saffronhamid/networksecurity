@@ -52,4 +52,13 @@ The system automates the entire ML lifecycle — **data ingestion, validation, t
 ├── Dockerfile             # Containerization
 ├── setup.py               # Package setup
 ├── README.md              # Documentation
+├── docs/diagrams/         # UML diagrams (source + PNG)
+│   ├── flow.uml
+│   ├── flow.png
+│   ├── architecture.uml
+│   ├── architecture.png
+│   ├── seq.uml
+│   ├── seq.png
+│   ├── class.uml
+│   └── class.png
 └── .github/workflows/     # CI/CD pipelines
