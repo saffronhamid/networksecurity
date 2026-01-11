@@ -47,42 +47,42 @@ graph TD
     end
     
     subgraph Data_Ingestion [Data Ingestion]
-        RunPipeline --> ReadData[Read raw Data from MongoDB/Source]
-        ReadData --> CreateIngestArt[Create DataIngestionArtifact]
-        CreateIngestArt --> SaveSplit[Save train/test split CSVs]
+        RunPipeline --> ReadData["Read raw Data from MongoDB/Source"]
+        ReadData --> CreateIngestArt["Create DataIngestionArtifact"]
+        CreateIngestArt --> SaveSplit["Save train/test split CSVs"]
     end
 
     subgraph Data_Validation [Data Validation]
-        SaveSplit --> LoadSchema[Load schema.yaml]
-        LoadSchema --> CheckCols[Check column names]
-        CheckCols --> CheckTypes[Check data types]
-        CheckTypes --> CheckMissing[Check missing values]
-        CheckMissing --> Valid{Schema valid?}
-        Valid -- Yes --> CreateValidArt[Create DataValidationArtifact]
-        Valid -- No --> LogError[Log validation error]
+        SaveSplit --> LoadSchema["Load schema.yaml"]
+        LoadSchema --> CheckCols["Check column names"]
+        CheckCols --> CheckTypes["Check data types"]
+        CheckTypes --> CheckMissing["Check missing values"]
+        CheckMissing --> Valid{"Schema valid?"}
+        Valid -- Yes --> CreateValidArt["Create DataValidationArtifact"]
+        Valid -- No --> LogError["Log validation error"]
         LogError --> Stop([Stop Pipeline])
     end
 
     subgraph Data_Transformation [Data Transformation]
-        CreateValidArt --> LoadValidData[Load validated data]
-        LoadValidData --> ApplyPreprocess[Apply preprocessing (Imputation, Scaling)]
-        ApplyPreprocess --> FeatExtract[Feature extraction]
-        FeatExtract --> SaveTrans[Save transformed numpy arrays]
-        SaveTrans --> CreateTransArt[Create DataTransformationArtifact]
+        CreateValidArt --> LoadValidData["Load validated data"]
+        LoadValidData --> ApplyPreprocess["Apply preprocessing (Imputation, Scaling)"]
+        ApplyPreprocess --> FeatExtract["Feature extraction"]
+        FeatExtract --> SaveTrans["Save transformed numpy arrays"]
+        SaveTrans --> CreateTransArt["Create DataTransformationArtifact"]
     end
 
     subgraph Model_Trainer [Model Trainer]
-        CreateTransArt --> LoadTransData[Load transformed data]
-        LoadTransData --> TrainModel[Train Candidate Models]
-        TrainModel --> GridSearch[Hyperparameter Tuning]
-        GridSearch --> EvalTrain[Evaluate on Test Set]
-        EvalTrain --> SaveModel[Save Best Model .pkl]
-        SaveModel --> CreateModelArt[Create ModelTrainerArtifact]
+        CreateTransArt --> LoadTransData["Load transformed data"]
+        LoadTransData --> TrainModel["Train Candidate Models"]
+        TrainModel --> GridSearch["Hyperparameter Tuning"]
+        GridSearch --> EvalTrain["Evaluate on Test Set"]
+        EvalTrain --> SaveModel["Save Best Model .pkl"]
+        SaveModel --> CreateModelArt["Create ModelTrainerArtifact"]
     end
     
     subgraph Model_Pusher [Model Pusher & Sync]
-        CreateModelArt --> PushModel[Push model to final_model directory]
-        PushModel --> SyncS3[Sync Artifacts & Model to AWS S3]
+        CreateModelArt --> PushModel["Push model to final_model directory"]
+        PushModel --> SyncS3["Sync Artifacts & Model to AWS S3"]
     end
     
     SyncS3 --> Complete([Pipeline Completed Successfully])
