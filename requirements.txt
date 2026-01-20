@@ -1,9 +1,8 @@
 python-dotenv
 pandas
 numpy
-pymongo
+pymongo[srv]>=4.6.3
 certifi
-pymongo[srv]
 scikit-learn
 mlflow
 pyaml
@@ -11,6 +10,5 @@ dagshub
 fastapi
 uvicorn
 python-multipart
-pymongo[srv]==3.6
 
 -e .
