@@ -26,14 +26,21 @@ from sklearn.ensemble import (
 import mlflow
 from urllib.parse import urlparse
 
+from dotenv import load_dotenv
 import dagshub
 dagshub.init(repo_owner='saffronhamid', repo_name='networksecurity', mlflow=True)
 
-#dagshub.init(repo_owner='faizan12', repo_name='networksecurity', mlflow=True)
+load_dotenv()
+mlflow_tracking_uri = os.getenv("MLFLOW_TRACKING_URI")
+mlflow_tracking_username = os.getenv("MLFLOW_TRACKING_USERNAME")
+mlflow_tracking_password = os.getenv("MLFLOW_TRACKING_PASSWORD")
 
-os.environ["MLFLOW_TRACKING_URI"]="https://dagshub.com/faizan12/networksecurity.mlflow"
-os.environ["MLFLOW_TRACKING_USERNAME"]="faizan12"
-os.environ["MLFLOW_TRACKING_PASSWORD"]="7104284f1bb44ece21e0e2adb4e36a250ae3251f"
+if mlflow_tracking_uri:
+    os.environ["MLFLOW_TRACKING_URI"] = mlflow_tracking_uri
+if mlflow_tracking_username:
+    os.environ["MLFLOW_TRACKING_USERNAME"] = mlflow_tracking_username
+if mlflow_tracking_password:
+    os.environ["MLFLOW_TRACKING_PASSWORD"] = mlflow_tracking_password
 
 
 
@@ -48,7 +55,9 @@ class ModelTrainer:
             raise NetworkSecurityException(e,sys)
         
     def track_mlflow(self,best_model,classificationmetric):
-        mlflow.set_registry_uri("https://dagshub.com/faizan12/networksecurity.mlflow")
+        registry_uri = os.getenv("MLFLOW_TRACKING_URI")
+        if registry_uri:
+            mlflow.set_registry_uri(registry_uri)
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
         with mlflow.start_run():
             f1_score=classificationmetric.f1_score
