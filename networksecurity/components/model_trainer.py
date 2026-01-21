@@ -53,6 +53,8 @@ def _configure_dagshub_from_env():
     if _dagshub_initialized:
         return
 
+    import dagshub
+
     dagshub_token = os.getenv("DAGSHUB_TOKEN")
     dagshub_user = (
         os.getenv("DAGSHUB_USER")
