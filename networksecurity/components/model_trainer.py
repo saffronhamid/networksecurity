@@ -28,7 +28,6 @@ from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 import dagshub
-dagshub.init(repo_owner='saffronhamid', repo_name='networksecurity', mlflow=True)
 
 load_dotenv()
 mlflow_tracking_uri = os.getenv("MLFLOW_TRACKING_URI")
@@ -43,6 +42,28 @@ if mlflow_tracking_password:
     os.environ["MLFLOW_TRACKING_PASSWORD"] = mlflow_tracking_password
 
 
+_dagshub_initialized = False
+
+
+def _configure_dagshub_from_env():
+    """
+    Configure DagsHub/MLflow only when training runs, using the non-interactive token.
+    Avoid calling dagshub.init at import time so FastAPI startup does not trigger OAuth.
+    """
+    global _dagshub_initialized
+    if _dagshub_initialized:
+        return
+
+    dagshub_token = os.getenv("DAGSHUB_TOKEN")
+    if dagshub_token:
+        dagshub.auth.add_app_token(dagshub_token)
+        dagshub.init(repo_owner="saffronhamid", repo_name="networksecurity", mlflow=True)
+    else:
+        logging.info("DAGSHUB_TOKEN not set; skipping DagsHub initialization.")
+
+    _dagshub_initialized = True
+
+
 
 
 
@@ -55,6 +76,7 @@ class ModelTrainer:
             raise NetworkSecurityException(e,sys)
         
     def track_mlflow(self,best_model,classificationmetric):
+        _configure_dagshub_from_env()
         registry_uri = os.getenv("MLFLOW_TRACKING_URI")
         if registry_uri:
             mlflow.set_registry_uri(registry_uri)
